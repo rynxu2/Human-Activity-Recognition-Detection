@@ -5,7 +5,7 @@ import torch
 import numpy as np
 from collections import deque
 import threading
-from train_model import TransformerModel, TransformerModelGrok, TransformerModelChatGPT, TransformerModelDeepseek, TransformerModelChatGPTOptimal, TransformerModelDeepseekOptimal, SEQUENCE_LENGTH, N_FEATURES, HIDDEN_SIZE, NUM_LAYERS, NUM_HEADS
+from models import TransformerModel, TransformerModelGrok, TransformerModelChatGPT, TransformerModelDeepseek, TransformerModelDeepseekOptimal, SEQUENCE_LENGTH, N_FEATURES, HIDDEN_SIZE, NUM_LAYERS, NUM_HEADS
 import logging
 import warnings
 warnings.simplefilter("ignore")
@@ -16,12 +16,10 @@ logger = logging.getLogger(__name__)
 
 class RealtimeActivityRecognition:
     def __init__(self):
-        # Load saved model and preprocessing objects
-        checkpoint = torch.load('results\\TransformerModelGrok.pth', map_location=torch.device('cpu'))
+        checkpoint = torch.load('results\\2\\TransformerModelDeepseek.pth', map_location=torch.device('cpu'))
         
-        # Initialize model
         num_classes = len(checkpoint['label_encoder'].classes_)
-        self.model = TransformerModelGrok(
+        self.model = TransformerModelDeepseek(
             input_size=N_FEATURES,
             hidden_size=HIDDEN_SIZE,
             num_layers=NUM_LAYERS,
@@ -31,17 +29,13 @@ class RealtimeActivityRecognition:
         self.model.load_state_dict(checkpoint['model_state_dict'])
         self.model.eval()
         
-        # Load preprocessing objects
         self.scaler = checkpoint['scaler']
         self.label_encoder = checkpoint['label_encoder']
         
-        # Dictionary to store buffers for each sensor client
         self.sensor_buffers = {}
         
-        # Set to store display clients
         self.display_clients = set()
         
-        # Initialize lock for thread-safe operations
         self.buffer_lock = threading.Lock()
         
         logger.info("Model loaded successfully")
@@ -67,13 +61,10 @@ class RealtimeActivityRecognition:
             if len(buffer) < SEQUENCE_LENGTH:
                 return None
             
-            # Convert buffer to numpy array
             sequence = np.array(list(buffer))
             
-            # Convert to tensor and add batch dimension
             sequence_tensor = torch.FloatTensor(sequence).unsqueeze(0)
             
-            # Make prediction
             with torch.no_grad():
                 output = self.model(sequence_tensor)
                 probabilities = torch.softmax(output, dim=1)
@@ -98,13 +89,22 @@ class RealtimeActivityRecognition:
             except websockets.exceptions.ConnectionClosed:
                 disconnected_clients.add(client)
 
-        # Xóa các client bị mất kết nối
         for client in disconnected_clients:
             self.display_clients.remove(client)
             logger.info(f"Display client disconnected. Remaining: {len(self.display_clients)}")
 
-    async def process_sensor_data(self, websocket, path):
-        """Xử lý dữ liệu từ sensor (port 8080)"""
+    async def handle_client(self, websocket, path):
+        """Handle both sensor and display clients on a single port"""
+        if path == "/sensor":
+            await self.process_sensor_data(websocket)
+        elif path == "/display":
+            await self.handle_display_client(websocket)
+        else:
+            logger.warning(f"Unknown client type with path: {path}")
+            return
+
+    async def process_sensor_data(self, websocket):
+        """Process sensor data (modified to remove path parameter)"""
         client_id = id(websocket)
         self.sensor_buffers[client_id] = deque(maxlen=SEQUENCE_LENGTH)
         
@@ -113,24 +113,19 @@ class RealtimeActivityRecognition:
         try:
             async for message in websocket:
                 try:
-                    # Parse JSON data
                     data = json.loads(message)
                     
-                    # Preprocess data for prediction
                     processed_data = self.preprocess_data(data)
                     if processed_data is None:
                         continue
                     
-                    # Add to client's buffer
                     with self.buffer_lock:
                         self.sensor_buffers[client_id].append(processed_data[0])
                     
-                    # Make prediction if buffer is full
                     prediction = self.make_prediction(client_id)
                     if prediction:
                         logger.info(f"Sensor {client_id} - Activity: {prediction[0]} (Confidence: {prediction[1]:.2f})")
                         
-                        # Gửi dự đoán đến tất cả display clients
                         prediction_data = {
                             "activity": prediction[0],
                             "confidence": float(prediction[1]),
@@ -147,14 +142,13 @@ class RealtimeActivityRecognition:
         except websockets.exceptions.ConnectionClosed:
             logger.info(f"Sensor client {client_id} disconnected")
         finally:
-            # Cleanup client's buffer
             with self.buffer_lock:
                 if client_id in self.sensor_buffers:
                     del self.sensor_buffers[client_id]
             logger.info(f"Sensor client {client_id} removed")
 
-    async def handle_display_client(self, websocket, path):
-        """Xử lý display client (port 8081)"""
+    async def handle_display_client(self, websocket):
+        """Handle display client (modified to remove path parameter)"""
         client_id = id(websocket)
         self.display_clients.add(websocket)
         
@@ -172,21 +166,14 @@ class RealtimeActivityRecognition:
 async def main():
     recognition = RealtimeActivityRecognition()
     
-    # Server nhận dữ liệu từ sensors (port 8080)
-    sensor_server = await websockets.serve(
-        recognition.process_sensor_data, "0.0.0.0", 8080
+    server = await websockets.serve(
+        recognition.handle_client, "0.0.0.0", 8080
     )
     
-    # Server gửi kết quả đến displays (port 8081)
-    display_server = await websockets.serve(
-        recognition.handle_display_client, "0.0.0.0", 8081
-    )
-
-    logger.info("WebSocket servers started:")
-    logger.info("- Port 8080: Receiving sensor data")
-    logger.info("- Port 8081: Sending predictions to displays")
+    logger.info("WebSocket server started:")
+    logger.info("- Port 8080: Handling both sensors (/sensor) and displays (/display)")
     
-    await asyncio.gather(sensor_server.wait_closed(), display_server.wait_closed())
+    await server.wait_closed()
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())

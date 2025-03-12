@@ -9,8 +9,8 @@ const char* ssid = "TP-LINK_BEF6";
 const char* password = "22446688";
 
 // WebSocket server settings
-const char* wsHost = "man-bizrate-poet-interest.trycloudflare.com";
-const int wsPort = 8765;
+const char* wsHost = "played-presence-throws-rugby.trycloudflare.com";
+const int wsPort = 8080;
 
 WebSocketsClient webSocket;
 Adafruit_MPU6050 mpu;
@@ -59,7 +59,7 @@ void setup() {
     Serial.println(WiFi.localIP());
     
     // Connect to WebSocket server
-    webSocket.begin(wsHost, wsPort, "/");
+    webSocket.begin(wsHost, wsPort, "/sensor");
     webSocket.onEvent(webSocketEvent);
     webSocket.setReconnectInterval(5000);
 }
