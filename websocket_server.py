@@ -4,19 +4,24 @@ import json
 import torch
 import numpy as np
 from collections import deque
+from datetime import datetime, timezone, timedelta
 import threading
 from models import TransformerModel, TransformerModelGrok, TransformerModelChatGPT, TransformerModelDeepseek, TransformerModelDeepseekOptimal, SEQUENCE_LENGTH, N_FEATURES, HIDDEN_SIZE, NUM_LAYERS, NUM_HEADS
 import logging
 import warnings
+from telegram.ext import Application
 warnings.simplefilter("ignore")
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+TOKEN = "7698309495:AAEpaxdsF2s76PACe3J7vHB6GPZmoozSf_I"
+CHAT_ID = "-1002319879693"
+
 class RealtimeActivityRecognition:
     def __init__(self):
-        checkpoint = torch.load('results\\2\\TransformerModelDeepseek.pth', map_location=torch.device('cpu'))
+        checkpoint = torch.load('results\\StandardScaler\\2\\TransformerModelDeepseek.pth', map_location=torch.device('cpu'))
         
         num_classes = len(checkpoint['label_encoder'].classes_)
         self.model = TransformerModelDeepseek(
@@ -38,8 +43,48 @@ class RealtimeActivityRecognition:
         
         self.buffer_lock = threading.Lock()
         
+        self.previous_activities = {}
+        self.consecutive_falls = {}
+        self.fall_threshold = 5
+        self.last_fall_alert = {}
+        self.fall_cooldown = 10
+        
+        self.bot_app = Application.builder().token(TOKEN).build()
+        self.bot_initialized = False
+        self.notification_queue = asyncio.Queue()
+        self.notification_task = None
+        
         logger.info("Model loaded successfully")
         logger.info(f"Available activities: {self.label_encoder.classes_}")
+        
+    async def initialize_bot(self):
+        if not self.bot_initialized:
+            await self.bot_app.initialize()
+            self.bot_initialized = True
+            
+    async def start(self):
+        await self.initialize_bot()
+        self.notification_task = asyncio.create_task(self.handle_notifications())
+        
+    async def handle_notifications(self):
+        while True:
+            try:
+                notification = await self.notification_queue.get()
+                await self.bot_app.bot.send_message(
+                    chat_id=CHAT_ID,
+                    text=notification['text'],
+                    parse_mode=notification.get('parse_mode', None)
+                )
+                self.notification_queue.task_done()
+                await asyncio.sleep(0.1)
+            except Exception as e:
+                logger.error(f"Error sending notification: {str(e)}")
+                
+    async def queue_notification(self, text, parse_mode=None):
+        await self.notification_queue.put({
+            'text': text,
+            'parse_mode': parse_mode
+        })
 
     def preprocess_data(self, data):
         try:
@@ -76,7 +121,6 @@ class RealtimeActivityRecognition:
                 return predicted_activity, confidence
 
     async def send_to_displays(self, prediction_data):
-        """Gửi kết quả dự đoán đến tất cả display clients"""
         if not self.display_clients:
             return
         
@@ -92,9 +136,26 @@ class RealtimeActivityRecognition:
         for client in disconnected_clients:
             self.display_clients.remove(client)
             logger.info(f"Display client disconnected. Remaining: {len(self.display_clients)}")
+            
+    async def send_to_bot(self):
+        try:
+            utc_plus_7 = timezone(timedelta(hours=7))
+            current_time = datetime.now(utc_plus_7).strftime('%Y-%m-%d %H:%M:%S')
+            text = (
+                "------------------------------------------"
+                "🚨 *CẢNH BÁO NGÃ!* 🚨\n"
+                "------------------------------------------\n"
+                "📌 *Trạng thái:* 🔴 **NGÃ PHÁT HIỆN**\n"
+                "------------------------------------------\n"
+               f"🕒 *Thời gian:* `{current_time}` \n"
+                "------------------------------------------\n"
+                "⚠️ **Hãy kiểm tra ngay!** ⚠️"
+            )
+            await self.queue_notification(text, parse_mode="Markdown")
+        except Exception as e:
+            logger.error(f"Error queuing telegram message: {str(e)}")
 
     async def handle_client(self, websocket, path):
-        """Handle both sensor and display clients on a single port"""
         if path == "/sensor":
             await self.process_sensor_data(websocket)
         elif path == "/display":
@@ -104,9 +165,11 @@ class RealtimeActivityRecognition:
             return
 
     async def process_sensor_data(self, websocket):
-        """Process sensor data (modified to remove path parameter)"""
         client_id = id(websocket)
         self.sensor_buffers[client_id] = deque(maxlen=SEQUENCE_LENGTH)
+        self.previous_activities[client_id] = None
+        self.consecutive_falls[client_id] = 0
+        self.last_fall_alert[client_id] = datetime.min.replace(tzinfo=timezone.utc)
         
         logger.info(f"New sensor client connected. ID: {client_id}")
 
@@ -124,7 +187,23 @@ class RealtimeActivityRecognition:
                     
                     prediction = self.make_prediction(client_id)
                     if prediction:
-                        logger.info(f"Sensor {client_id} - Activity: {prediction[0]} (Confidence: {prediction[1]:.2f})")
+                        activity, confidence = prediction
+                        logger.info(f"Sensor {client_id} - Activity: {activity} (Confidence: {confidence:.2f})")
+                        
+                        current_time = datetime.now(timezone(timedelta(hours=7)))
+                        
+                        if activity == "falling":
+                            self.consecutive_falls[client_id] += 1
+                            current_time = datetime.now(timezone(timedelta(hours=7)))
+                            if (current_time - self.last_fall_alert[client_id]).total_seconds() > 10:
+                                if self.previous_activities[client_id] != "falling":
+                                    logger.info(f"Client {client_id} - Gửi cảnh báo đến bot!")
+                                    self.previous_activities[client_id] = activity
+                                    self.last_fall_alert[client_id] = current_time
+                                    await self.send_to_bot()
+                        else:
+                            self.consecutive_falls[client_id] = 0
+                            self.previous_activities[client_id] = activity
                         
                         prediction_data = {
                             "activity": prediction[0],
@@ -145,10 +224,15 @@ class RealtimeActivityRecognition:
             with self.buffer_lock:
                 if client_id in self.sensor_buffers:
                     del self.sensor_buffers[client_id]
+                if client_id in self.previous_activities:
+                    del self.previous_activities[client_id]
+                if client_id in self.consecutive_falls:
+                    del self.consecutive_falls[client_id]
+                if client_id in self.last_fall_alert:
+                    del self.last_fall_alert[client_id]
             logger.info(f"Sensor client {client_id} removed")
 
     async def handle_display_client(self, websocket):
-        """Handle display client (modified to remove path parameter)"""
         client_id = id(websocket)
         self.display_clients.add(websocket)
         
@@ -165,6 +249,7 @@ class RealtimeActivityRecognition:
 
 async def main():
     recognition = RealtimeActivityRecognition()
+    await recognition.start()
     
     server = await websockets.serve(
         recognition.handle_client, "0.0.0.0", 8080
@@ -173,7 +258,11 @@ async def main():
     logger.info("WebSocket server started:")
     logger.info("- Port 8080: Handling both sensors (/sensor) and displays (/display)")
     
-    await server.wait_closed()
+    try:
+        await server.wait_closed()
+    finally:
+        if recognition.notification_task:
+            recognition.notification_task.cancel()
 
 if __name__ == "__main__":
     asyncio.run(main())

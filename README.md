@@ -32,3 +32,16 @@
 8 - Loss: 0.2334 | Accuracy: 0.9654 | F1-Score: 0.9652</br>
 <strong>Model tốt nhất: 1 với Accuracy: 0.9801 F1: 0.9800 - "results\\2\\TransformerModelDeepseek.pth"</strong>
 </code>
+
+<code>
+0 - Loss: 0.2375 | Accuracy: 0.9591 | F1-Score: 0.9590</br>
+1 - Loss: 0.2167 | Accuracy: 0.9612 | F1-Score: 0.9613</br>
+2 - Loss: 0.2894 | Accuracy: 0.9622 | F1-Score: 0.9620</br>
+3 - Loss: 0.2051 | Accuracy: 0.9717 | F1-Score: 0.9716</br>
+4 - Loss: 0.2672 | Accuracy: 0.9528 | F1-Score: 0.9529</br>
+5 - Loss: 0.4180 | Accuracy: 0.9433 | F1-Score: 0.9433</br>
+6 - Loss: 0.1992 | Accuracy: 0.9654 | F1-Score: 0.9652</br>
+7 - Loss: 0.2482 | Accuracy: 0.9612 | F1-Score: 0.9611</br>
+8 - Loss: 0.2605 | Accuracy: 0.9654 | F1-Score: 0.9652</br>
+<strong>Model tốt nhất: 3 với Accuracy: 0.9717 F1: 0.9716 - "results\\1\\TransformerModelGrok_w100.pth"</strong>
+</code>

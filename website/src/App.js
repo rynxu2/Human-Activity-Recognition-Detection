@@ -127,7 +127,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    socketRef.current = new WebSocket("ws://played-presence-throws-rugby.trycloudflare.com:8080/display");
+    socketRef.current = new WebSocket("ws://adaptor-cruz-far-road.trycloudflare.com:8080/display");
 
     socketRef.current.onopen = () => setError(null);
     socketRef.current.onerror = () => setError("Connection failed");

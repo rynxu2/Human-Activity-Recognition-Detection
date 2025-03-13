@@ -8,7 +8,7 @@ from torch.utils.data import Dataset, DataLoader
 import math
 import torch.nn.functional as F
 
-SEQUENCE_LENGTH = 50  # 1 second of data at 50Hz
+SEQUENCE_LENGTH = 100  # 1 second of data at 50Hz
 N_FEATURES = 6  # AccelX,Y,Z and GyroX,Y,Z
 HIDDEN_SIZE = 64
 NUM_LAYERS = 3

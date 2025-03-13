@@ -9,7 +9,7 @@ const char* ssid = "TP-LINK_BEF6";
 const char* password = "22446688";
 
 // WebSocket server settings
-const char* wsHost = "played-presence-throws-rugby.trycloudflare.com";
+const char* wsHost = "adaptor-cruz-far-road.trycloudflare.com";
 const int wsPort = 8080;
 
 WebSocketsClient webSocket;
