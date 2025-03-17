@@ -6,7 +6,7 @@ import numpy as np
 from collections import deque
 from datetime import datetime, timezone, timedelta
 import threading
-from models import TransformerModel, TransformerModelGrok, TransformerModelChatGPT, TransformerModelDeepseek, TransformerModelDeepseekOptimal, SEQUENCE_LENGTH, N_FEATURES, HIDDEN_SIZE, NUM_LAYERS, NUM_HEADS
+from models import TransformerModel, SEQUENCE_LENGTH, N_FEATURES, HIDDEN_SIZE, NUM_LAYERS, NUM_HEADS
 import logging
 import warnings
 from telegram.ext import Application
@@ -16,15 +16,16 @@ warnings.simplefilter("ignore")
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-TOKEN = "7698309495:AAEpaxdsF2s76PACe3J7vHB6GPZmoozSf_I"
-CHAT_ID = "-1002319879693"
-
 class RealtimeActivityRecognition:
-    def __init__(self):
-        checkpoint = torch.load('results\\StandardScaler\\2\\TransformerModelDeepseek.pth', map_location=torch.device('cpu'))
+    def __init__(self, weightPath):
+        self.TeleBotToken = "7698309495:AAEpaxdsF2s76PACe3J7vHB6GPZmoozSf_I"
+        self.TeleBotChatID = "-1002319879693"
+        self.weightPath = weightPath
+        
+        checkpoint = torch.load(self.weightPath, map_location=torch.device('cpu'))
         
         num_classes = len(checkpoint['label_encoder'].classes_)
-        self.model = TransformerModelDeepseek(
+        self.model = TransformerModel(
             input_size=N_FEATURES,
             hidden_size=HIDDEN_SIZE,
             num_layers=NUM_LAYERS,
@@ -38,9 +39,7 @@ class RealtimeActivityRecognition:
         self.label_encoder = checkpoint['label_encoder']
         
         self.sensor_buffers = {}
-        
         self.display_clients = set()
-        
         self.buffer_lock = threading.Lock()
         
         self.previous_activities = {}
@@ -49,7 +48,7 @@ class RealtimeActivityRecognition:
         self.last_fall_alert = {}
         self.fall_cooldown = 10
         
-        self.bot_app = Application.builder().token(TOKEN).build()
+        self.bot_app = Application.builder().token(self.TeleBotToken).build()
         self.bot_initialized = False
         self.notification_queue = asyncio.Queue()
         self.notification_task = None
@@ -71,7 +70,7 @@ class RealtimeActivityRecognition:
             try:
                 notification = await self.notification_queue.get()
                 await self.bot_app.bot.send_message(
-                    chat_id=CHAT_ID,
+                    chat_id=self.TeleBotChatID,
                     text=notification['text'],
                     parse_mode=notification.get('parse_mode', None)
                 )
@@ -142,13 +141,9 @@ class RealtimeActivityRecognition:
             utc_plus_7 = timezone(timedelta(hours=7))
             current_time = datetime.now(utc_plus_7).strftime('%Y-%m-%d %H:%M:%S')
             text = (
-                "------------------------------------------"
                 "🚨 *CẢNH BÁO NGÃ!* 🚨\n"
-                "------------------------------------------\n"
                 "📌 *Trạng thái:* 🔴 **NGÃ PHÁT HIỆN**\n"
-                "------------------------------------------\n"
                f"🕒 *Thời gian:* `{current_time}` \n"
-                "------------------------------------------\n"
                 "⚠️ **Hãy kiểm tra ngay!** ⚠️"
             )
             await self.queue_notification(text, parse_mode="Markdown")

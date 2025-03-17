@@ -36,7 +36,6 @@ void setup() {
     Serial.begin(115200);
     Wire.begin();
     
-    // Initialize MPU6050
     Serial.println("Initializing MPU6050...");
     if (!mpu.begin()) {
         Serial.println("Could not find a valid MPU6050 sensor, check wiring!");
@@ -46,8 +45,7 @@ void setup() {
     }
     
     Serial.println("MPU6050 Found!");
-    
-    // Connect to WiFi
+
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
@@ -58,7 +56,6 @@ void setup() {
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
     
-    // Connect to WebSocket server
     webSocket.begin(wsHost, wsPort, "/sensor");
     webSocket.onEvent(webSocketEvent);
     webSocket.setReconnectInterval(5000);
@@ -69,18 +66,15 @@ void loop() {
     
     unsigned long currentTime = millis();
     if (currentTime - lastReadTime >= READ_INTERVAL) {
-        // Read sensor data
         sensors_event_t a, g, temp;
         mpu.getEvent(&a, &g, &temp);
         
-        // Create JSON string with sensor data
         char jsonString[200];
         snprintf(jsonString, sizeof(jsonString),
                 "{\"ax\":%.2f,\"ay\":%.2f,\"az\":%.2f,\"gx\":%.2f,\"gy\":%.2f,\"gz\":%.2f}",
                 a.acceleration.x, a.acceleration.y, a.acceleration.z,
                 g.gyro.x, g.gyro.y, g.gyro.z);
         
-        // Send data to server
         webSocket.sendTXT(jsonString);
         
         lastReadTime = currentTime;
