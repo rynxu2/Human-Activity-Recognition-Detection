@@ -243,7 +243,7 @@ class RealtimeActivityRecognition:
             logger.info(f"Display client {client_id} removed. Remaining: {len(self.display_clients)}")
 
 async def main():
-    recognition = RealtimeActivityRecognition()
+    recognition = RealtimeActivityRecognition('results\\StandardScaler\\TransformerModel_w100.pth')
     await recognition.start()
     
     server = await websockets.serve(

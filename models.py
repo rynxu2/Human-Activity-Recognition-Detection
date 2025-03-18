@@ -15,7 +15,7 @@ LEARNING_RATE = 0.001
 class TransformerModel(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, num_heads, num_classes, dropout=0.1):
         super().__init__()
-        
+
         self.input_projection = nn.Linear(input_size, hidden_size)
         self.dropout = nn.Dropout(dropout)
         encoder_layer = nn.TransformerEncoderLayer(
@@ -28,7 +28,7 @@ class TransformerModel(nn.Module):
         self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
         self.pooling = lambda x: torch.mean(x, dim=1)
         self.fc = nn.Linear(hidden_size, num_classes)
-        
+
     def forward(self, x):
         x = self.input_projection(x)
         x = self.dropout(x)

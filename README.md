@@ -1,47 +1,193 @@
-# Thống kê
+# 🎓 Human Activity Recognition - MPU6050
 
-<ul>
-    <li><strong>MinMaxScaler:</strong></li>
-</ul>
-<code>
-0 - Loss: 0.1003 | Accuracy: 0.9780 | F1-Score: 0.9779</br>
-1 - Loss: 0.1210 | Accuracy: 0.9748 | F1-Score: 0.9749</br>
-2 - Loss: 0.2971 | Accuracy: 0.9465 | F1-Score: 0.9460</br>
-3 - Loss: 0.1593 | Accuracy: 0.9685 | F1-Score: 0.9685</br>
-4 - Loss: 0.2157 | Accuracy: 0.9654 | F1-Score: 0.9653</br>
-5 - Loss: 0.2383 | Accuracy: 0.9612 | F1-Score: 0.9612</br>
-6 - Loss: 0.1586 | Accuracy: 0.9727 | F1-Score: 0.9728</br>
-7 - Loss: 0.2203 | Accuracy: 0.9675 | F1-Score: 0.9675</br>
-8 - Loss: 0.3129 | Accuracy: 0.9224 | F1-Score: 0.9235</br>
-<strong>Model tốt nhất: 0 với Accuracy: 0.9780 F1: 0.9779 - "results\\MinMaxScaler\\TransformerModel.pth"</strong>
-</code>
+<div align="center">
 
-<ul>
-    <li><strong>StandardScaler:</strong></li>
-</ul>
+<p align="center">
+  <img src="https://github.com/drkhanusa/DNU_PlagiarismChecker/raw/main/docs/images/logo.png" alt="DaiNam University Logo" width="200"/>
+</p>
 
-<code>
-0 - Loss: 0.1694 | Accuracy: 0.9643 | F1-Score: 0.9645</br>
-1 - Loss: 0.1049 | Accuracy: 0.9801 | F1-Score: 0.9800</br>
-2 - Loss: 0.1855 | Accuracy: 0.9717 | F1-Score: 0.9717</br>
-3 - Loss: 0.1036 | Accuracy: 0.9780 | F1-Score: 0.9780</br>
-4 - Loss: 0.1844 | Accuracy: 0.9622 | F1-Score: 0.9620</br>
-5 - Loss: 0.3728 | Accuracy: 0.9150 | F1-Score: 0.9107</br>
-6 - Loss: 0.1263 | Accuracy: 0.9738 | F1-Score: 0.9737</br>
-7 - Loss: 0.2103 | Accuracy: 0.9654 | F1-Score: 0.9650</br>
-8 - Loss: 0.2334 | Accuracy: 0.9654 | F1-Score: 0.9652</br>
-<strong>Model tốt nhất: 1 với Accuracy: 0.9801 F1: 0.9800 - "results\\2\\TransformerModelDeepseek.pth"</strong>
-</code>
 
-<code>
-0 - Loss: 0.2375 | Accuracy: 0.9591 | F1-Score: 0.9590</br>
-1 - Loss: 0.2167 | Accuracy: 0.9612 | F1-Score: 0.9613</br>
-2 - Loss: 0.2894 | Accuracy: 0.9622 | F1-Score: 0.9620</br>
-3 - Loss: 0.2051 | Accuracy: 0.9717 | F1-Score: 0.9716</br>
-4 - Loss: 0.2672 | Accuracy: 0.9528 | F1-Score: 0.9529</br>
-5 - Loss: 0.4180 | Accuracy: 0.9433 | F1-Score: 0.9433</br>
-6 - Loss: 0.1992 | Accuracy: 0.9654 | F1-Score: 0.9652</br>
-7 - Loss: 0.2482 | Accuracy: 0.9612 | F1-Score: 0.9611</br>
-8 - Loss: 0.2605 | Accuracy: 0.9654 | F1-Score: 0.9652</br>
-<strong>Model tốt nhất: 3 với Accuracy: 0.9717 F1: 0.9716 - "results\\1\\TransformerModelGrok_w100.pth"</strong>
-</code>
+
+</div>
+
+<h3 align="center">🔬 Human Activity Recognition Through AI</h3>
+
+<p align="center">
+  <strong>A Real-Time Detection System Powered by Deep Learning and Sensor Data Processing</strong>
+</p>
+
+<p align="center">
+  <a href="#-architecture">Architecture</a> •
+  <a href="#-key-features">Features</a> •
+  <a href="#-tech-stack">Tech Stack</a> •
+  <a href="#-installation">Installation</a> •
+  <a href="#-getting-started">Getting Started</a> •
+  <a href="#-documentation">Docs</a>
+</p>
+
+## 🏗️ Architecture
+
+<p align="center">
+  <img src="https://i.postimg.cc/CxZvMTNF/Blank-diagram.png" alt="System Architecture" width="900"/>
+</p>
+
+The system employs a three-tier architecture:
+
+1. **📄 Document Processing Layer**: Extracts text from PDFs, segments into sentences, and generates embeddings
+2. **💾 Storage Layer**: Stores document metadata in PostgreSQL and vector embeddings in Milvus
+3. **🔎 Search Layer**: Performs high-performance similarity searches and generates detailed reports
+
+## ✨ Key Features
+
+### 🧠 Advanced AI Technology
+- **Semantic Analysis Engine**: Powered by state-of-the-art transformer models
+- **Multi-lingual Support**: Optimized for Vietnamese and English content
+- **Context-Aware Detection**: Understanding beyond simple text matching
+
+### ⚡ High-Performance Architecture
+- **Vector Search Technology**: Using Milvus for lightning-fast similarity search
+- **Parallel Processing**: Efficient handling of large document collections
+- **Scalable Infrastructure**: Designed for institutional deployment
+
+### 📊 Comprehensive Analysis
+- **Visual Results**: Interactive visualization of matched content
+- **Detailed Reports**: Page-by-page similarity analysis
+- **Evidence Mapping**: Precise location of potential matches
+
+## 🔧 Tech Stack
+
+<div align="center">
+
+### Core Technologies
+[![Docker](https://img.shields.io/badge/Docker-9ae5ff?style=for-the-badge&logo=docker&logoColor=blue)](https://www.docker.com/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-19354c?style=for-the-badge&logo=HuggingFace&logoColor=ffbf00)](https://huggingface.co/sentence-transformers)
+### Database Systems
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Milvus](https://img.shields.io/badge/Milvus-00A1EA?style=for-the-badge&logo=milvus&logoColor=white)](https://milvus.io/)
+
+</div>
+
+## 📥 Installation
+
+### 🛠️ Prerequisites
+
+- 🐍 **Python** `3.8+` - Core programming language
+- 🐘 **PostgreSQL** `12+` - Relational database for metadata
+- 🔍 **Milvus** `2.x` - Vector database for similarity search
+- 🐳 **Docker & Docker Compose** - Container management
+- 💾 **RAM** `8GB+` - Recommended for optimal performance
+- 💻 **CPU** `4+ cores` - For parallel processing
+- 🖴 **Storage** `10GB+` - For document storage and embeddings
+
+### 🗃️ Database Setup
+
+1. 🐘 **PostgreSQL Setup**
+   ```bash
+   # Start PostgreSQL service
+   docker run -d \
+     --name postgres \
+     -e POSTGRES_USER=username \
+     -e POSTGRES_PASSWORD=password \
+     -e POSTGRES_DB=database_name \
+     -p 5434:5432 \
+     postgres:12
+   ```
+
+2. 🔍 **Milvus Setup**
+   ```bash
+   # Download Milvus docker-compose file
+   wget https://github.com/milvus-io/milvus/releases/download/v2.3.3/milvus-standalone-docker-compose.yml -O docker-compose.yml
+
+   # Start Milvus
+   docker-compose up -d
+   ```
+
+### ⚙️ Project Setup
+
+1. 📦 **Clone Repository**
+   ```bash
+   git clone https://github.com/drkhanusa/DNU_PlagiarismChecker.git
+   cd DNU_PlagiarismChecker
+   ```
+
+2. 🌟 **Create Virtual Environment**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Windows: venv\Scripts\activate
+   ```
+
+3. 📚 **Install Dependencies**
+   ```bash
+   pip install -e .
+   ```
+
+4. ⚡ **Environment Configuration**
+   ```bash
+   # Copy example environment file
+   cp .env.example .env
+
+   # Edit .env with your settings
+   # Example configuration:
+   DATABASE_URL=postgresql://username:password@localhost:5434/database_name
+   MILVUS_HOST=localhost
+   MILVUS_PORT=19530
+   ```
+
+5. 🔄 **Initialize Database**
+   ```bash
+   # Create database tables
+   python setup_database.py
+
+   # Initialize Milvus collection
+   python create_milvus_db.py
+   ```
+
+## 🚀 Getting Started
+
+### ⚡ Quick Start
+```python
+from plagiarism_checker import check_plagiarism_details
+
+# Check a document
+results = check_plagiarism_details(
+    file_path="path/to/document.pdf",
+    min_similarity=0.9
+)
+
+# View results
+print(f"Overall Similarity: {results['data']['total_percent']}%")
+for doc in results['data']['similarity_documents']:
+    print(f"Match: {doc['name']} - {doc['similarity_value']}%")
+```
+
+### 📥 Adding Documents to Database
+```python
+from create_corpus import CorpusCreator
+
+creator = CorpusCreator()
+creator.process_document("path/to/document.pdf")
+```
+
+## 📚 Documentation
+
+For detailed documentation, please visit our [Wiki](https://github.com/drkhanusa/DNU_PlagiarismChecker/wiki) or refer to the following sections:
+- 📖 [Installation Guide](docs/installation.md)
+- 👥 [User Manual](docs/user-manual.md)
+- 🔧 [API Reference](docs/api-reference.md)
+- 🤝 [Contributing Guidelines](docs/contributing.md)
+
+## 📝 License
+
+© 2024 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
+
+---
+
+<div align="center">
+
+### Made with 💻 by AIoTLab at DaiNam University
+
+[Website](https://fit.dainam.edu.vn) • [GitHub](https://github.com/drkhanusa) • [Contact Us](mailto:contact@dainam.edu.vn)
+
+</div>
