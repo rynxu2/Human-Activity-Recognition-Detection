@@ -1,0 +1,8 @@
+pytorch
+websockets
+asyncio
+python-telegram-bot
+scikit-learn
+matplotlib
+seaborn
+pandas

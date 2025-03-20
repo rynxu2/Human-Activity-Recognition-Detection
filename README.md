@@ -6,14 +6,12 @@
   <img src="https://github.com/drkhanusa/DNU_PlagiarismChecker/raw/main/docs/images/logo.png" alt="DaiNam University Logo" width="200"/>
 </p>
 
-
-
 </div>
 
 <h3 align="center">🔬 Human Activity Recognition Through AI</h3>
 
 <p align="center">
-  <strong>A Real-Time Detection System Powered by Deep Learning and Sensor Data Processing</strong>
+  <strong>A Real-Time Activity Detection System Using MPU6050 Sensor and Deep Learning</strong>
 </p>
 
 <p align="center">
@@ -33,39 +31,40 @@
 
 The system employs a three-tier architecture:
 
-1. **📄 Document Processing Layer**: Extracts text from PDFs, segments into sentences, and generates embeddings
-2. **💾 Storage Layer**: Stores document metadata in PostgreSQL and vector embeddings in Milvus
-3. **🔎 Search Layer**: Performs high-performance similarity searches and generates detailed reports
+1. **📱 Data Collection Layer**: Captures real-time motion data using MPU6050 sensor
+2. **🔄 Processing Layer**: Processes sensor data and classifies activities using AI
+3. **📊 Visualization Layer**: Real-time dashboard for activity monitoring
 
 ## ✨ Key Features
 
-### 🧠 Advanced AI Technology
-- **Semantic Analysis Engine**: Powered by state-of-the-art transformer models
-- **Multi-lingual Support**: Optimized for Vietnamese and English content
-- **Context-Aware Detection**: Understanding beyond simple text matching
+### 🧠 AI-Powered Activity Recognition
+- **Real-time Processing**: Instant classification of human activities
+- **Transformer-based Model**: High accuracy using advanced deep learning
+- **Multi-activity Support**: Walking, Jogging, Sitting, Standing, Falling detection
+- **Abnormal Activity Alerts**: Automatic fall detection and notifications
 
-### ⚡ High-Performance Architecture
-- **Vector Search Technology**: Using Milvus for lightning-fast similarity search
-- **Parallel Processing**: Efficient handling of large document collections
-- **Scalable Infrastructure**: Designed for institutional deployment
+### ⚡ High-Performance System
+- **WebSocket Protocol**: Low-latency real-time data streaming
+- **Optimized Data Handling**: Efficient sensor data buffering and processing
+- **Scalable & Flexible**: Supports multiple sensors and future expansions
 
-### 📊 Comprehensive Analysis
-- **Visual Results**: Interactive visualization of matched content
-- **Detailed Reports**: Page-by-page similarity analysis
-- **Evidence Mapping**: Precise location of potential matches
+### 📊 Smart Monitoring & Alerts
+- **Live Sensor Charts**: Real-time acceleration and gyroscope data display
+- **Activity Dashboard**: Current activity status and confidence levels
+- **Telegram Notifications**: Instant alerts for abnormal activities like falls
 
 ## 🔧 Tech Stack
 
 <div align="center">
 
 ### Core Technologies
-[![Docker](https://img.shields.io/badge/Docker-9ae5ff?style=for-the-badge&logo=docker&logoColor=blue)](https://www.docker.com/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![HuggingFace](https://img.shields.io/badge/HuggingFace-19354c?style=for-the-badge&logo=HuggingFace&logoColor=ffbf00)](https://huggingface.co/sentence-transformers)
-### Database Systems
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Milvus](https://img.shields.io/badge/Milvus-00A1EA?style=for-the-badge&logo=milvus&logoColor=white)](https://milvus.io/)
+[![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
+[![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
+[![PtTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://www.tensorflow.org/)
+
+### Hardware Components
+[![ESP32](https://img.shields.io/badge/ESP32-E7352C?style=for-the-badge&logo=espressif&logoColor=white)](https://www.espressif.com/)
+[![MPU6050](https://img.shields.io/badge/MPU6050-00979D?style=for-the-badge&logo=arduino&logoColor=white)](https://invensense.tdk.com/products/motion-tracking/6-axis/mpu-6050/)
 
 </div>
 
@@ -73,121 +72,64 @@ The system employs a three-tier architecture:
 
 ### 🛠️ Prerequisites
 
-- 🐍 **Python** `3.8+` - Core programming language
-- 🐘 **PostgreSQL** `12+` - Relational database for metadata
-- 🔍 **Milvus** `2.x` - Vector database for similarity search
-- 🐳 **Docker & Docker Compose** - Container management
-- 💾 **RAM** `8GB+` - Recommended for optimal performance
-- 💻 **CPU** `4+ cores` - For parallel processing
-- 🖴 **Storage** `10GB+` - For document storage and embeddings
-
-### 🗃️ Database Setup
-
-1. 🐘 **PostgreSQL Setup**
-   ```bash
-   # Start PostgreSQL service
-   docker run -d \
-     --name postgres \
-     -e POSTGRES_USER=username \
-     -e POSTGRES_PASSWORD=password \
-     -e POSTGRES_DB=database_name \
-     -p 5434:5432 \
-     postgres:12
-   ```
-
-2. 🔍 **Milvus Setup**
-   ```bash
-   # Download Milvus docker-compose file
-   wget https://github.com/milvus-io/milvus/releases/download/v2.3.3/milvus-standalone-docker-compose.yml -O docker-compose.yml
-
-   # Start Milvus
-   docker-compose up -d
-   ```
+- 🔌 **ESP32** - Microcontroller
+- 🎯 **MPU6050** - 6-axis motion sensor
+- 📱 **Node.js** `14+` - For web dashboard
+- 🐍 **Python** `3.9+`- Core programming language
 
 ### ⚙️ Project Setup
 
-1. 📦 **Clone Repository**
-   ```bash
-   git clone https://github.com/drkhanusa/DNU_PlagiarismChecker.git
-   cd DNU_PlagiarismChecker
+1. 📦 **Hardware Assembly**
+   ```
+   Connect MPU6050 to ESP32:
+   - VCC → 3.3V
+   - GND → GND
+   - SCL → GPIO22
+   - SDA → GPIO21
    ```
 
-2. 🌟 **Create Virtual Environment**
+2. 🌟 **ESP32 Setup**
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # Windows: venv\Scripts\activate
+   # Install required libraries in Arduino IDE
+   - ESP32 Board
+   - WebSockets
+   - ArduinoJson
+   - Adafruit MPU6050
    ```
 
-3. 📚 **Install Dependencies**
+3. 🐍 **Websocket Setup**
    ```bash
-   pip install -e .
+   # Install required libraries in Arduino IDE
+   pip install -r requirements.txt
    ```
 
-4. ⚡ **Environment Configuration**
+4. 📱 **Website Setup**
    ```bash
-   # Copy example environment file
-   cp .env.example .env
+   # Navigate to website directory
+   cd website
 
-   # Edit .env with your settings
-   # Example configuration:
-   DATABASE_URL=postgresql://username:password@localhost:5434/database_name
-   MILVUS_HOST=localhost
-   MILVUS_PORT=19530
-   ```
+   # Install dependencies
+   npm install
 
-5. 🔄 **Initialize Database**
-   ```bash
-   # Create database tables
-   python setup_database.py
-
-   # Initialize Milvus collection
-   python create_milvus_db.py
+   # Change websocket url
+   notepad src/App.js
+   change websocket url
    ```
 
 ## 🚀 Getting Started
 
 ### ⚡ Quick Start
-```python
-from plagiarism_checker import check_plagiarism_details
 
-# Check a document
-results = check_plagiarism_details(
-    file_path="path/to/document.pdf",
-    min_similarity=0.9
-)
-
-# View results
-print(f"Overall Similarity: {results['data']['total_percent']}%")
-for doc in results['data']['similarity_documents']:
-    print(f"Match: {doc['name']} - {doc['similarity_value']}%")
-```
-
-### 📥 Adding Documents to Database
-```python
-from create_corpus import CorpusCreator
-
-creator = CorpusCreator()
-creator.process_document("path/to/document.pdf")
-```
-
-## 📚 Documentation
-
-For detailed documentation, please visit our [Wiki](https://github.com/drkhanusa/DNU_PlagiarismChecker/wiki) or refer to the following sections:
-- 📖 [Installation Guide](docs/installation.md)
-- 👥 [User Manual](docs/user-manual.md)
-- 🔧 [API Reference](docs/api-reference.md)
-- 🤝 [Contributing Guidelines](docs/contributing.md)
-
-## 📝 License
-
-© 2024 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
+1. Upload ESP32 code
+2. Start websocket server
+   ```bash
+   python websocket_server.py
+   ```
+3. Start the web dashboard
+   ```bash
+   cd website
+   npm run start
+   ```
+4. Access dashboard at `http://localhost:3000`
 
 ---
-
-<div align="center">
-
-### Made with 💻 by AIoTLab at DaiNam University
-
-[Website](https://fit.dainam.edu.vn) • [GitHub](https://github.com/drkhanusa) • [Contact Us](mailto:contact@dainam.edu.vn)
-
-</div>
