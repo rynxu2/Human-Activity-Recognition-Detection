@@ -1,13 +1,5 @@
 # 🎓 Human Activity Recognition - MPU6050
 
-<div align="center">
-
-<p align="center">
-  <img src="https://github.com/drkhanusa/DNU_PlagiarismChecker/raw/main/docs/images/logo.png" alt="DaiNam University Logo" width="200"/>
-</p>
-
-</div>
-
 <h3 align="center">🔬 Human Activity Recognition Through AI</h3>
 
 <p align="center">
