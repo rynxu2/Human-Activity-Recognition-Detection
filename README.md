@@ -1,140 +1,155 @@
-# 🎓 Human Activity Recognition - MPU6050
+# Nhận Dạng Hành Động Con Người Bằng Cảm Biến MPU6050
 
-<h3 align="center">🔬 Human Activity Recognition Through AI</h3>
-
+Dự án này phát triển hệ thống Nhận dạng và phân loại các hành động của con người (đi bộ, chạy, nhảy, ngã, đứng yên, ngồi) từ dữ liệu cảm biến MPU6050. 
+Ứng dụng trong nhiều lĩnh vực như giám sát an ninh, chăm sóc sức khỏe, và phân tích hành vi trong môi trường thông minh.
 <p align="center">
-  <strong>A Real-Time Activity Detection System Using MPU6050 Sensor and Deep Learning</strong>
+    <img src="https://img.youtube.com/vi/XOEN9W05_4A/0.jpg"" alt="System Architecture" width="500"/>
 </p>
 
-<p align="center">
-  <a href="#-architecture">Architecture</a> •
-  <a href="#-key-features">Features</a> •
-  <a href="#-tech-stack">Tech Stack</a> •
-  <a href="#-installation">Installation</a> •
-  <a href="#-getting-started">Getting Started</a> •
-  <a href="#-documentation">Docs</a>
-</p>
+## 📋 Tổng Quan
 
-## 🏗️ Architecture
+Hệ thống sử dụng mô hình Transformer để nhận diện hành động con người qua dữ liệu cảm biến MPU6050, kết hợp với giao diện web để hiển thị kết quả.
 
-<p align="center">
-  <img src="https://i.postimg.cc/CxZvMTNF/Blank-diagram.png" alt="System Architecture" width="900"/>
-</p>
+## 🔍 Thành Phần Chính
 
-The system employs a three-tier architecture:
+### 📱 ESP32 Microcontroller + MPU6050
+- Thu thập dữ liệu gia tốc và con quay hồi chuyển
+- Truyền dữ liệu qua websocket protocol
 
-1. **📱 Data Collection Layer**: Captures real-time motion data using MPU6050 sensor
-2. **🔄 Processing Layer**: Processes sensor data and classifies activities using AI
-3. **📊 Visualization Layer**: Real-time dashboard for activity monitoring
+### 🖥️ Websocket Server
+- Nhận các dữ liệu đầu vào từ MPU6050
+- Xử lý và chuẩn hóa dữ liệu
+- Áp dụng mô hình Transformer để phát hiện hành động
+- Xử lý kết quả và gửi kết quả đến đầu ra
 
-## ✨ Key Features
+### 🌐 Flask Web UI
+- Hiển thị thông tin sensor realtime
+- Hiển thị kết quả phát hiện đối tượng
+- Cung cấp giao diện biểu đồ dữ liệu gia tốc và con quay hồi chuyển
 
-### 🧠 AI-Powered Activity Recognition
-- **Real-time Processing**: Instant classification of human activities
-- **Transformer-based Model**: High accuracy using advanced deep learning
-- **Multi-activity Support**: Walking, Jogging, Sitting, Standing, Falling detection
-- **Abnormal Activity Alerts**: Automatic fall detection and notifications
+## ⚙️ Hướng Dẫn Cài Đặt
 
-### ⚡ High-Performance System
-- **WebSocket Protocol**: Low-latency real-time data streaming
-- **Optimized Data Handling**: Efficient sensor data buffering and processing
-- **Scalable & Flexible**: Supports multiple sensors and future expansions
-
-### 📊 Smart Monitoring & Alerts
-- **Live Sensor Charts**: Real-time acceleration and gyroscope data display
-- **Activity Dashboard**: Current activity status and confidence levels
-- **Telegram Notifications**: Instant alerts for abnormal activities like falls
-
-## 🔧 Tech Stack
-
-<div align="center">
-
-### Core Technologies
-[![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
-[![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
-[![PtTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://www.tensorflow.org/)
-
-### Hardware Components
-[![ESP32](https://img.shields.io/badge/ESP32-E7352C?style=for-the-badge&logo=espressif&logoColor=white)](https://www.espressif.com/)
-[![MPU6050](https://img.shields.io/badge/MPU6050-00979D?style=for-the-badge&logo=arduino&logoColor=white)](https://invensense.tdk.com/products/motion-tracking/6-axis/mpu-6050/)
-
-</div>
-
-## 📥 Installation
-
-### 🛠️ Prerequisites
-
-- 🔌 **ESP32** - Microcontroller
-- 🎯 **MPU6050** - 6-axis motion sensor
-- 📱 **Node.js** `14+` - For web dashboard
-- 🐍 **Python** `3.9+`- Core programming language
-
-### ⚙️ Project Setup
-
-1. 📦 **Hardware Assembly**
-   ```
-   Connect MPU6050 to ESP32:
-   - VCC → 3.3V
-   - GND → GND
-   - SCL → GPIO22
-   - SDA → GPIO21
-   ```
-
-2. 🌟 **ESP32 Setup**
-   ```bash
-   # Install required libraries in Arduino IDE
-   - ESP32 Board
-   - WebSockets
-   - ArduinoJson
-   - Adafruit MPU6050
-   ```
-
-3. 🐍 **Websocket Setup**
-   ```bash
-   # Install required libraries in Arduino IDE
-   pip install -r requirements.txt
-   ```
-
-4. 📱 **Website Setup**
-   ```bash
-   # Navigate to website directory
-   cd website
-
-   # Install dependencies
-   npm install
-
-   # Change websocket url
-   notepad src/App.js
-   change websocket url
-   ```
-
-## 🚀 Getting Started
-
-### ⚡ Quick Start
-1. Clone repository
+1. Clone repository này về máy:
    ```bash
    git clone https://github.com/rynxu2/Human-Activity-Recognition-Detection.git
    cd Human-Activity-Recognition-Detection
    ```
-2. Upload ESP32 code
-3. Cài đặt các thư viện Python cần thiết
+
+2. Cài đặt các thư viện Python cần thiết:
    ```bash
    pip install -r requirements.txt
    ```
-4. Start websocket server
-   ```bash
-   python websocket_server.py
-   ```
-5. Start the web dashboard
-   ```bash
-   cd website
-   npm run start
-   ```
-6. Access dashboard at `http://localhost:3000`
 
-### 🖥️ Train Model
+3. Khởi động máy chủ:
+   ```bash
+   python run.py
+   ```
 
-```bash
-models.ipynb
+4. Truy cập giao diện web tại địa chỉ server đã cấu hình
+
+## 📁 Cấu Trúc Dự Án
+
 ```
+Human-Activity-Recognition-Detection/
+├── app/                                # Thư mục ứng dụng Flask
+│   ├── __init__.py                     # Khởi tạo ứng dụng Flask
+│   ├── routes.py                       # Flask routes
+│   ├── static/                         # Thư mục tĩnh
+│   │   ├── css/
+│   │   │   └── style.css              # CSS tùy chỉnh
+│   │   └── js/
+│   │       └── main.js                 # WebSocket và xử lý biểu đồ
+│   └── templates/                      # Flask templates
+│       ├── base.html                   # Mẫu cơ sở
+│       └── index.html                  # Bảng điều khiển chính
+├── esp32_mpu6050/                      # ESP32 code
+│   └── get_data_from_esp32.ino         # Thu thập dữ liệu MPU6050
+│   └── esp32_mpu6050.ino               # Thu thập dữ liệu MPU6050 và gửi đến server
+├── data/                               # ML models
+│   ├── merged_data.csv                 # Data đã gộp và xử lý
+│   └── initially
+│       ├── ...                         # Data ban đầu của từng người
+├── results/                            # Mô hình đã huấn luyện
+│   └── StandardScaler/
+│       └── TransformerModel_w100.pth   # Trọng số đã huấn luyện
+├── config.py                           # Cài đặt cấu hình
+├── run.py                              # Điểm vào chính
+├── websocket_server.py                 # WebSocket server
+├── train.py                            # Huấn luyện mô hình
+└── requirements.txt                    # Phụ thuộc Python
+```
+
+## 📊 Dữ Liệu
+
+Dữ liệu huấn luyện là tập dữ liệu riêng được thu thập bởi nhóm.
+Gồm 6 nhãn: walking, jogging, standing, jumping, sitting, falling
+
+## 🛠️ Công Nghệ Sử Dụng
+
+- **Deep Learning**: PyTorch, Transformer
+- **Backend**: Flask
+- **Frontend**: HTML
+- **Phân tích dữ liệu**: NumPy, Pandas, Matplotlib
+
+
+## Tỷ lệ Train và Test
+Dữ liệu của 6 đối tượng (tình nguyện viên) được thu ở tốc độ 50Hz thu được tổng 119165 samples:
+ - falling: 9390 samples
+ - jumping: 10646 samples
+ - jogging: 23734 samples
+ - sitting: 14676 samples
+ - standing: 28376 samples
+ - walking: 32343 samples
+
+## Agenda
+
+### 1. Phân tích dữ liệu (EDA)
+
+- Trực quan hóa t-SNE của dữ liệu
+<p align="center">
+  <img src="images/image.png" alt="t-SNE Visualization" width="800"/>
+  <br>
+  <em>Trực quan hóa t-SNE của dữ liệu</em>
+</p>
+
+- Phân tích phân phối dữ liệu
+<p align="center">
+  <img src="images/image-1.png" alt="Data Analysis" width="600"/>
+  <img src="images/image-2.png" alt="Data Analysis" width="600"/>
+  <br>
+  <em>Phân tích phân phối dữ liệu</em>
+</p>
+<p align="center">
+  <img src="images/image-3.png" alt="Data Analysis" width="600"/>
+  <img src="images/image-4.png" alt="Data Analysis" width="600"/>
+  <br>
+  <em>Phân tích phân phối dữ liệu</em>
+</p>
+<p align="center">
+  <img src="images/image-5.png" alt="Data Analysis" width="600"/>
+  <img src="images/image-6.png" alt="Data Analysis" width="600"/>
+  <br>
+  <em>Phân tích phân phối dữ liệu</em>
+</p>
+
+### 3. Deep Learning Models:
+Hệ thống sử dụng kiến trúc **Transformer**:
+- **Transformer**: Được sử dụng để trích xuất và mô hình hóa mối quan hệ giữa các đặc trưng theo chuỗi thời gian, giúp nhận diện hoạt động chính xác hơn.
+- **Pipeline**:
+   + Dữ liệu được thu thập từ cảm biến MPU6050 (gia tốc kế và con quay hồi chuyển).
+   + Chuỗi dữ liệu cảm biến được chia thành các đoạn thời gian cố định.
+   + Transformer xử lý toàn bộ chuỗi dữ liệu bằng self-attention, giúp mô hình học được sự phụ thuộc dài hạn giữa các trạng thái của cơ thể.
+   
+###   4.	Kết quả
+ - Độ chính xác của mô hình Transformer đạt được ~99% trên tập kiểm tra.
+   <img src="images/accurancy.png" alt="Data Analysis" width="600"/>
+
+## 📝 Liên Hệ
+
+gmail: dobaolong207@gmail.com
+
+## 📜 Giấy Phép
+
+[Thông tin giấy phép]
+
 ---

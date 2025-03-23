@@ -1,0 +1,139 @@
+:root {
+    --bg-color: #0a0f18ec;
+    --card-bg: #111827;
+    --text-primary: #FFFFFF;
+    --text-secondary: #CBD5E0;
+    --accent-1: #00FF00;
+    --accent-2: #FF0000;
+    --chart-line-1: #00FF00;
+    --chart-line-2: #FF00FF;
+    --chart-line-3: #00FFFF;
+    --grid-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .App {
+    background-color: var(--bg-color);
+    min-height: 100vh;
+    padding: 1rem;
+  }
+  
+  .dashboard-title {
+    color: var(--text-primary);
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  .status-panel {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .activity-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .activity-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  
+  .activity-info {
+    flex-grow: 1;
+  }
+  
+  .activity-text {
+    color: var(--text-primary);
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  
+  .confidence-text {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  
+  .sensor-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .sensor-value {
+    background: rgba(160, 174, 192, 0.1);
+    padding: 0.8rem;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .sensor-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+  
+  .sensor-number {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  
+  .chart-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chart-title {
+    color: var(--text-primary);
+    margin: 0 0 1rem 0;
+    font-size: 1.2rem;
+  }
+  
+  .error-banner {
+    background: #F56565;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  @keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .status-panel {
+      order: 2;
+    }
+  }

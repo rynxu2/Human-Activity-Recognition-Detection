@@ -10,6 +10,7 @@ from models import TransformerModel, SEQUENCE_LENGTH, N_FEATURES, HIDDEN_SIZE, N
 import logging
 import warnings
 from telegram.ext import Application
+import socket
 warnings.simplefilter("ignore")
 
 # Configure logging
@@ -242,16 +243,33 @@ class RealtimeActivityRecognition:
             self.display_clients.remove(websocket)
             logger.info(f"Display client {client_id} removed. Remaining: {len(self.display_clients)}")
 
+def get_local_ip():
+    """Get the local IP address of the machine"""
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        local_ip = s.getsockname()[0]
+        s.close()
+        return local_ip
+    except Exception as e:
+        logger.error(f"Error getting local IP: {e}")
+        return "127.0.0.1"
+
 async def main():
     recognition = RealtimeActivityRecognition('results\\StandardScaler\\TransformerModel_w100.pth')
     await recognition.start()
     
+    local_ip = get_local_ip()
+    port = 8080
+    
     server = await websockets.serve(
-        recognition.handle_client, "0.0.0.0", 8080
+        recognition.handle_client, local_ip, port
     )
     
     logger.info("WebSocket server started:")
-    logger.info("- Port 8080: Handling both sensors (/sensor) and displays (/display)")
+    logger.info(f"- Local Network: ws://{local_ip}:{port}")
+    logger.info(f"- Localhost: ws://127.0.0.1:{port}")
+    logger.info("- Endpoints: /sensor for sensors, /display for displays")
     
     try:
         await server.wait_closed()

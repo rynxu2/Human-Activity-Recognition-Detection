@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="App">
+    <div class="dashboard-grid">
+        <div class="status-panel">
+            <div class="activity-badge">
+                <div class="activity-dot"></div>
+                <div class="activity-info">
+                    <h2 class="activity-text" id="activity">UNKNOWN</h2>
+                    <p class="confidence-text" id="confidence">Confidence: 0%</p>
+                </div>
+            </div>
+
+            <div class="sensor-grid" id="sensorGrid"></div>
+        </div>
+
+        <div class="charts-panel">
+            <div class="chart-card">
+                <h3 class="chart-title">Accelerometer Data</h3>
+                <canvas id="accChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">Gyroscope Data</h3>
+                <canvas id="gyroChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
