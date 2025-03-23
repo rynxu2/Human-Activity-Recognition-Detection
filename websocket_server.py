@@ -30,7 +30,7 @@ class RealtimeActivityRecognition:
             hidden_size=HIDDEN_SIZE,
             num_layers=NUM_LAYERS,
             num_heads=NUM_HEADS,
-            num_classes=num_classes
+            num_classes=num_classes 
         )
         self.model.load_state_dict(checkpoint['model_state_dict'])
         self.model.eval()

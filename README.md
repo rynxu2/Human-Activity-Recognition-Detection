@@ -119,17 +119,30 @@ The system employs a three-tier architecture:
 ## 🚀 Getting Started
 
 ### ⚡ Quick Start
-
-1. Upload ESP32 code
-2. Start websocket server
+1. Clone repository
+   ```bash
+   git clone https://github.com/rynxu2/Human-Activity-Recognition-Detection.git
+   cd Human-Activity-Recognition-Detection
+   ```
+2. Upload ESP32 code
+3. Cài đặt các thư viện Python cần thiết
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Start websocket server
    ```bash
    python websocket_server.py
    ```
-3. Start the web dashboard
+5. Start the web dashboard
    ```bash
    cd website
    npm run start
    ```
-4. Access dashboard at `http://localhost:3000`
+6. Access dashboard at `http://localhost:3000`
 
+### 🖥️ Train Model
+
+```bash
+models.ipynb
+```
 ---

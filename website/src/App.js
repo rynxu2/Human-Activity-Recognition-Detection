@@ -127,7 +127,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const url = "adaptor-cruz-far-road.trycloudflare.com:8080";
+    const url = "class-expression-liberty-accessible.trycloudflare.com:8080";
     socketRef.current = new WebSocket(`ws://${url}/display`);
 
     socketRef.current.onopen = () => setError(null);
