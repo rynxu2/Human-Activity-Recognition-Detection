@@ -79,6 +79,19 @@ Human-Activity-Recognition-Detection/
 └── requirements.txt                    # Phụ thuộc Python
 ```
 
+## 🖥️ Huấn Luyện Mô Hình
+
+1. Chỉnh sửa các thông số
+   ```bash
+   BATCH_SIZE
+   EPOCHS
+   # đường dẫn đến dữ liệu
+   ```
+4. Huấn luyện
+   ```bash
+   python train.py
+   ```
+
 ## 📊 Dữ Liệu
 
 Dữ liệu huấn luyện là tập dữ liệu riêng được thu thập bởi nhóm.

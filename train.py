@@ -34,7 +34,7 @@ def prepare_sequences(data, sequence_length):
 BATCH_SIZE = 32
 EPOCHS = 100
 
-df = pd.read_csv('data\\combined\\merged_users_corrected.csv')
+df = pd.read_csv('data\\merged_data.csv')
 
 features = ['AccelX', 'AccelY', 'AccelZ', 'GyroX', 'GyroY', 'GyroZ']
 X = df[features]
